@@ -10,6 +10,35 @@ import (
 	"github.com/mattn/go-colorable"
 )
 
+func Test256Color(t *testing.T) {
+	rb := new(bytes.Buffer)
+	Output = rb
+	NoColor = false
+	testColors := make([]struct {
+		text string
+		n    int
+	}, 256)
+	for i := 0; i < 256; i++ {
+		testColors[i].text = fmt.Sprintf("%d", i)
+		testColors[i].n = i
+	}
+
+	for _, c := range testColors {
+		New().AddCo256(c.n).Print(c.text)
+
+		line, _ := rb.ReadString('\n')
+		scannedLine := fmt.Sprintf("%q", line)
+		colored := fmt.Sprintf("\x1b[38;5;%dm%s\x1b[0m", c.n, c.text)
+		escapedForm := fmt.Sprintf("%q", colored)
+
+		fmt.Printf("%s\t: %s\n", c.text, line)
+
+		if scannedLine != escapedForm {
+			t.Errorf("Expecting %s, got '%s'\n", escapedForm, scannedLine)
+		}
+	}
+}
+
 // Testing colors is kinda different. First we test for given colors and their
 // escaped formatted results. Next we create some visual tests to be tested.
 // Each visual test includes the color name to be compared.

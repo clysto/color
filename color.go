@@ -156,6 +156,16 @@ func New(value ...Attribute) *Color {
 	return c
 }
 
+// Co256 returns a new foreground color in 256-color mode.
+func Co256(n int) *Color {
+	return New(foreground, 5, Attribute(n))
+}
+
+// BgCo256 returns a new background color in 256-color mode.
+func BgCo256(n int) *Color {
+	return New(background, 5, Attribute(n))
+}
+
 // RGB returns a new foreground color in 24-bit RGB.
 func RGB(r, g, b int) *Color {
 	return New(foreground, 2, Attribute(r), Attribute(g), Attribute(b))
@@ -164,6 +174,18 @@ func RGB(r, g, b int) *Color {
 // BgRGB returns a new background color in 24-bit RGB.
 func BgRGB(r, g, b int) *Color {
 	return New(background, 2, Attribute(r), Attribute(g), Attribute(b))
+}
+
+// AddCo256 is used to chain foreground 256-color SGR parameters.
+func (c *Color) AddCo256(n int) *Color {
+	c.params = append(c.params, foreground, 5, Attribute(n))
+	return c
+}
+
+// AddBgCo256 is used to chain background 256-color SGR parameters.
+func (c *Color) AddBgCo256(n int) *Color {
+	c.params = append(c.params, background, 5, Attribute(n))
+	return c
 }
 
 // AddRGB is used to chain foreground RGB SGR parameters. Use as many as parameters to combine
